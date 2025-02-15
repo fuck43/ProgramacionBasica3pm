@@ -9,3 +9,5 @@ impares = [num for num in range(1, limite + 1, 2)]
 print(f"Números pares hasta {limite}: {pares}")
 print(f"Números impares hasta {limite}: {impares}")
 #va indicar si nes par o inpar
+
+
