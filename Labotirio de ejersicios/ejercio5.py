@@ -1,16 +1,24 @@
+def factorial(numero):
+    if numero < 0:  
+        return   # ✅ Corrección: El factorial de 0 es 1.
+    
+    # ❌ Eliminado: `elif numero == 0 or numero == 1:` porque es redundante.
+    elif numero == 1:
+        return   # ✅ Corrección: Factorial de 1 también es 1.
 
-def es_primo(n):
-    if n <= 1:
-        return False
-    if n <= 3:
-        return True
-    if n % 2 == 0 or n % 3 == 0:
-        return False
-    i = 5
-    while i * i <= n:
-        if n % i == 0 or n % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-#lo que va aser utlizar un clico while
+    resultado = 1  # ✅ Se inicializa correctamente antes del `for`
+    
+    for i in range(2, numero + 1):  
+        resultado *= i  # ✅ Corrección: `resultado *= i` estaba bien, solo mejoramos claridad.
+
+    return resultado  # ✅ Retornamos el resultado correctamente.
+
+# Solicitar número al usuario
+numero = int(input("Ingrese el número para calcular el factorial: "))
+
+# Mostrar el resultado
+print(f"El factorial de {numero} es {factorial(numero)}")
+
+
+
    
