@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Grabador</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Hola mundo</h1>
+
+    <div class="container">
+        <div class="row mt-3 px-3">
+            <div class="col text-center">
+                <!-- Botón de grabar -->
+                <button type="button" class="btn-record" id="record" onclick="record()">
+                    <img class="mic-img" src="static/img/microphone.png" alt="Grabar">
+                </button>
+
+                <!-- Botón de detener -->
+                <button type="button" class="btn-record btn-record-red" id="stop" onclick="stop()">
+                    <img class="mic-img" id="record-stop-label" src="static/img/microphone.png" alt="Detener">
+                    <span id="record-stop-loading" style="display: none;">
+                        <span class="spinner-border spinner-border-sm"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
