@@ -1,0 +1,100 @@
+import tkinter as tk
+
+import requests
+
+import re
+
+import csv
+
+import os
+ 
+# --- Validar nombre con regex ---
+
+def validar_nombre(nombre):
+
+    return re.match("^[a-zA-Z]+$", nombre) is not None
+ 
+# --- Guardar datos en CSV ---
+
+def guardar_datos(info):
+
+    archivo = "pokemones.csv"
+
+    existe = os.path.exists(archivo)
+
+    with open(archivo, mode='a', newline='', encoding='utf-8') as f:
+
+        writer = csv.writer(f)
+
+        if not existe:
+
+            writer.writerow(["Nombre", "Tipos", "Habilidades"])
+
+        writer.writerow([info["nombre"], ", ".join(info["tipos"]), ", ".join(info["habilidades"])])
+ 
+# --- Obtener datos desde la API y limpiarlos ---
+
+def obtener_datos_pokemon(nombre_pokemon):
+
+    url = f"https://pokeapi.co/api/v2/pokemon/{nombre_pokemon.lower()}"
+
+    respuesta = requests.get(url)
+
+    if respuesta.status_code == 200:
+
+        datos = respuesta.json()
+
+        pokemon_info = {
+
+            "nombre": datos["name"].capitalize(),
+
+            "tipos": [t["type"]["name"] for t in datos["types"]],
+
+            "habilidades": [h["ability"]["name"] for h in datos["abilities"]]
+
+        }
+
+        guardar_datos(pokemon_info)
+
+        return f"Nombre: {pokemon_info['nombre']}\nTipos: {', '.join(pokemon_info['tipos'])}\nHabilidades: {', '.join(pokemon_info['habilidades'])}"
+
+    else:
+
+        return f"No se encontró información para: {nombre_pokemon}"
+ 
+# --- Función del botón ---
+
+def mostrar_info():
+
+    nombre = entrada.get()
+
+    if validar_nombre(nombre):
+
+        info = obtener_datos_pokemon(nombre)
+
+    else:
+
+        info = "Entrada inválida. Usa solo letras sin espacios."
+
+    resultado.config(text=info)
+ 
+# --- Interfaz gráfica ---
+
+ventana = tk.Tk()
+
+ventana.title("Consulta Pokémon")
+ 
+tk.Label(ventana, text="Nombre del Pokémon:").pack(pady=5)
+
+entrada = tk.Entry(ventana)
+
+entrada.pack(pady=5)
+ 
+tk.Button(ventana, text="Buscar", command=mostrar_info).pack(pady=5)
+
+resultado = tk.Label(ventana, text="", justify="left")
+
+resultado.pack(pady=10)
+ 
+ventana.mainloop()
+ 

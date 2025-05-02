@@ -1,0 +1,57 @@
+import re
+import numpy as np
+import statistics as stats
+import pandas as pd
+
+# === Parte 1: Datos crudos simulados (puedes reemplazar por lectura de archivo externo) ===
+raw_data = """
+Pikachu, Electric, 35, 55, 40
+Charmander, Fire, 39, 52, 43
+Bulbasaur, Grass, 45, 49, 49
+Squirtle, Water, 44, 48, 65
+Eevee, Normal, 55, 55, 50
+"""
+
+# === Parte 2: Limpieza y validación inicial con regex ===
+pattern = re.compile(r'^[A-Za-z]+,\s?[A-Za-z]+,\s?\d{1,3},\s?\d{1,3},\s?\d{1,3}$')
+cleaned_data = []
+
+for line in raw_data.strip().split('\n'):
+    if pattern.match(line.strip()):
+        cleaned_data.append(line.strip())
+
+# Guardar datos limpios en archivo
+with open("pokemon_limpios.txt", "w") as f:
+    for item in cleaned_data:
+        f.write(item + "\n")
+
+# === Parte 3: Leer y validar nuevamente los datos desde archivo ===
+with open("pokemon_limpios.txt", "r") as f:
+    lines = f.readlines()
+
+validated_data = []
+for line in lines:
+    if pattern.match(line.strip()):
+        validated_data.append(line.strip().split(','))
+
+# === Parte 4: Convertir a DataFrame ===
+df = pd.DataFrame(validated_data, columns=["Nombre", "Tipo", "HP", "Ataque", "Defensa"])
+df[["HP", "Ataque", "Defensa"]] = df[["HP", "Ataque", "Defensa"]].astype(int)
+
+# === Parte 5: Análisis estadístico ===
+print("=== Estadísticas de HP ===")
+print(f"Media: {np.mean(df['HP']):.2f}")
+print(f"Mediana: {np.median(df['HP'])}")
+print(f"Moda: {stats.mode(df['HP'])}")
+print(f"Desviación estándar: {np.std(df['HP']):.2f}")
+
+print("\n=== Estadísticas de Ataque ===")
+print(f"Media: {np.mean(df['Ataque']):.2f}")
+print(f"Mediana: {np.median(df['Ataque'])}")
+print(f"Moda: {stats.mode(df['Ataque'])}")
+print(f"Desviación estándar: {np.std(df['Ataque']):.2f}")
+
+# === Parte 6: Preparar para visualización ===
+df["Total"] = df["HP"] + df["Ataque"] + df["Defensa"]
+df.to_csv("pokemon_procesado.csv", index=False)
+print("\nDatos listos para visualización guardados en 'pokemon_procesado.csv'")
